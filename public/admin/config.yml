@@ -35,19 +35,33 @@ collections:
         label: "Carruseles"
         name: "home"
         fields:
-          - label: "Hero Carrusel"
+          - label: "Hero Carrusel (opcional)"
             name: "heroCarousel"
             widget: "list"
             field:
-              label: "Imagen"
-              name: "image"
-              widget: "image"
-              choose_url: true
+              {
+                label: "Imagen",
+                name: "image",
+                widget: "image",
+                choose_url: true,
+              }
           - label: "Productos Carrusel"
             name: "productsCarousel"
             widget: "list"
             field:
-              label: "Imagen"
-              name: "image"
-              widget: "image"
-              choose_url: true
+              {
+                label: "Imagen",
+                name: "image",
+                widget: "image",
+                choose_url: true,
+              }
+          - label: "Combos Carrusel"
+            name: "combosCarousel"
+            widget: "list"
+            field:
+              {
+                label: "Imagen",
+                name: "image",
+                widget: "image",
+                choose_url: true,
+              }

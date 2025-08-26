@@ -1,4 +1,37 @@
 {
-  "heroCarousel": [{ "image": "/uploads/hero-1.jpg" }],
-  "productsCarousel": []
+  "heroCarousel": [],
+  "productsCarousel": [
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078775/Primera_vacuno_corte_v_zaltwv.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/Segunda_precios_1_tzv2qq.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/tercera_precios_2_sjkorq.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078771/cuarta_subproductos_bji0u2.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/quinta_precios_3_pfasee.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/sexta_cerdo_f1ls3q.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/septima_precios_4_f7sxme.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078773/octava_pollo_cdrij8.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078772/novena_precios_5_c3ef1o.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078771/decima_cortes_parrileros_n1jeix.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078773/onceava_precios_6_v083vb.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078772/doceava_chorizos_x9dng3.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/treceava_precios_7_bqa4qx.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078771/catorceava_embutidos_kbkidy.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/quinceava_precios_8_cxmgbm.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078772/diecisieteava_cecinas_drqbj3.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078771/dieciochoava_precios_10_vsp1gp.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078771/diecinueveava_productos_don_70_wn6pkh.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078778/vigesima_precios_11_qbbeb7.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078778/vigesimaprimera_masas_congeladas_vmoiv1.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078779/vigesimosegunda_precios_12_za8nmx.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078781/vigesimotercera_contacto_sofpfu.png" }
+  ],
+  "combosCarousel": [
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078779/vigesimoquinta_combos_ucvl0w.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078781/vigesimosexta_combo_1_sou95z.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078781/vigesimoseptima_combo_2_usgs6v.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078779/vigesimooctava_combo_3_xffbfa.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078779/vigesimonovena_combo_4_xoewug.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078778/treinteava_combo_5_elxvxw.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078778/trigesimoprimera_combo_6_nqqvlz.png" },
+    { "image": "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078778/trigesimosegunda_combo_7_ebhlyz.png" }
+  ]
 }
