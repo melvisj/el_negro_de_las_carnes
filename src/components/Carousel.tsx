@@ -1,61 +1,63 @@
-import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useState, useEffect } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CarouselProps {
   images: string[];
   autoPlay?: boolean;
   interval?: number;
   showIndicators?: boolean;
-  className?: string;
+  className?: string; // se mezcla con el wrapper
 }
 
-const Carousel: React.FC<CarouselProps> = ({ 
-  images, 
-  autoPlay = false, 
-  interval = 5000,
+const Carousel: React.FC<CarouselProps> = ({
+  images,
+  autoPlay = false,
+  interval = 30000,
   showIndicators = true,
-  className = ""
+  className = "",
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    if (!autoPlay) return;
-    
+    if (!autoPlay || images.length <= 1) return;
     const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => 
-        prevIndex === images.length - 1 ? 0 : prevIndex + 1
+      setCurrentIndex((prev) =>
+        prev === images.length - 1 ? 0 : prev + 1
       );
     }, interval);
-
     return () => clearInterval(timer);
   }, [autoPlay, interval, images.length]);
 
   const goToPrevious = () => {
-    setCurrentIndex(currentIndex === 0 ? images.length - 1 : currentIndex - 1);
+    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
-
   const goToNext = () => {
-    setCurrentIndex(currentIndex === images.length - 1 ? 0 : currentIndex + 1);
+    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
-
-  const goToSlide = (index: number) => {
-    setCurrentIndex(index);
-  };
+  const goToSlide = (index: number) => setCurrentIndex(index);
 
   if (images.length === 0) return null;
 
   return (
-    <div className={`relative overflow-hidden rounded-lg ${className}`}>
-      <div 
-        className="flex transition-transform duration-300 ease-in-out"
+    <div
+      className={[
+        // altura por proporción + mínimo para móviles
+        "relative w-full overflow-hidden rounded-2xl bg-[#0B1620] aspect-16-9 min-h-[220px]",
+        className,
+      ].join(" ")}
+    >
+      {/* Track de slides */}
+      <div
+        className="flex h-full transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${currentIndex * 100}%)` }}
       >
         {images.map((image, index) => (
-          <div key={index} className="w-full flex-shrink-0">
-            <img 
-              src={image} 
+          <div key={index} className="w-full h-full flex-shrink-0">
+            <img
+              src={image}
               alt={`Slide ${index + 1}`}
-              className="w-full h-full object-cover"
+              className="block w-full h-full object-contain"
+              loading="lazy"
             />
           </div>
         ))}
@@ -63,30 +65,33 @@ const Carousel: React.FC<CarouselProps> = ({
 
       {images.length > 1 && (
         <>
-          {/* Navigation Buttons */}
+          {/* Botones */}
           <button
             onClick={goToPrevious}
-            className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
+            aria-label="Anterior"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors duration-200"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
+            aria-label="Siguiente"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
 
-          {/* Indicators */}
+          {/* Indicadores */}
           {showIndicators && (
-            <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-              {images.map((_, index) => (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+              {images.map((_, i) => (
                 <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`w-3 h-3 rounded-full transition-colors duration-200 ${
-                    index === currentIndex ? 'bg-white' : 'bg-white/50'
+                  key={i}
+                  onClick={() => goToSlide(i)}
+                  className={`w-3 h-3 rounded-full transition-colors ${
+                    i === currentIndex ? "bg-white" : "bg-white/50"
                   }`}
+                  aria-label={`Ir al slide ${i + 1}`}
                 />
               ))}
             </div>

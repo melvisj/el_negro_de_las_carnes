@@ -1,18 +1,17 @@
 import React from 'react';
-import Carousel from './Carousel';
 
 interface HeroSectionProps {
   title: string;
   subtitle: string;
   logo: string;
-  carouselImages: string[];
+  heroRightImage: string;   // <- una sola imagen fija
 }
 
 const HeroSection: React.FC<HeroSectionProps> = ({ 
   title, 
   subtitle, 
   logo, 
-  carouselImages 
+  heroRightImage
 }) => {
   return (
     <section className="relative min-h-screen bg-[#0C1922] text-white pt-16">
@@ -24,7 +23,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             <img 
               src={logo} 
               alt="ElNegroDeLasCarnes" 
-              className="h-24 w-auto mx-auto lg:mx-0 mb-8"
+              className="h-auto w-[clamp(140px,18vw,280px)] mx-auto lg:mx-0 mb-8"
             />
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
               {title}
@@ -42,14 +41,15 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             </a>
           </div>
 
-          {/* Right Content - Carousel */}
+          {/* Right Content - Imagen fija */}
           <div className="lg:w-1/2 lg:pl-12">
             <div className="max-w-md mx-auto lg:max-w-full">
-              <Carousel 
-                images={carouselImages} 
-                autoPlay={true}
-                interval={4000}
-                className="h-96 lg:h-[500px] shadow-2xl"
+              <img
+                src={heroRightImage}
+                alt="Cortes premium"
+                className="block h-auto max-w-full 
+                           w-[340px] md:w-[460px] lg:w-[600px] xl:w-[680px]
+                           object-contain drop-shadow-2xl"
               />
             </div>
           </div>

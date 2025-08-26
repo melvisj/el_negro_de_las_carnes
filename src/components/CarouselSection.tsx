@@ -36,12 +36,13 @@ const CarouselSection: React.FC<CarouselSectionProps> = ({
           </h2>
         </div>
         <div className="max-w-4xl mx-auto">
-          <Carousel 
-            images={images}
-            autoPlay={true}
-            interval={3000}
-            className="h-96 md:h-[600px] shadow-2xl"
-          />
+          <Carousel
+          images={images}
+          autoPlay={true}
+          interval={30000}
+          className="aspect-16-9 lg:aspect-21-9 rounded-2xl shadow-2xl bg-[#0B1620]"
+        />
+
         </div>
       </div>
     </section>

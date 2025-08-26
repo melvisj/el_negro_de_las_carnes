@@ -1,3 +1,4 @@
+// src/App.tsx
 import React from 'react';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
@@ -7,12 +8,13 @@ import CarouselSection from './components/CarouselSection';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 
+// 👇 Contenido editable por Decap CMS (Netlify CMS)
+import branding from './content/branding.json';
+
 const App: React.FC = () => {
-  // Assets
-  const logo = "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078772/logo_zf3vhz.jpg";
-  
+  // Si más adelante quieres mover estos arrays al CMS, se puede.
   const productImages = [
-    "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078772/Catalogo_rgnnmq.png",
+    "https://res.cloudinary.com/db3zlgzix/image/upload/v1756177608/WhatsApp_Image_2025-08-25_at_11.04.54_PM_f0jcgi.jpg",
     "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078775/Primera_vacuno_corte_v_zaltwv.png",
     "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/Segunda_precios_1_tzv2qq.png",
     "https://res.cloudinary.com/db3zlgzix/image/upload/v1756078776/tercera_precios_2_sjkorq.png",
@@ -50,13 +52,14 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <Header logo={logo} />
-      
+      {/* Si tu Header ya no usa logo (texto tipográfico), puede ignorar esta prop */}
+      <Header logo={branding.logo} />
+
       <HeroSection
         title="Calidad Premium en cada corte"
-        subtitle="Desde Santiago, te traemos carnes de Categoría V, frescas y de origen nacional. Pedido rápido desde nuestro WhatsApp, directo al mejor asado."
-        logo={logo}
-        carouselImages={[productImages[0]]}
+        subtitle="Desde Santiago, te traemos carnes de Categoría V, frescas y de origen nacional."
+        logo={branding.logo}
+        heroRightImage={branding.heroRightImage}
       />
 
       <ContentSection

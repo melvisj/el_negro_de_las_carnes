@@ -1,0 +1,53 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "public/uploads" # dónde se guardan los archivos en el repo
+public_folder: "/uploads" # cómo se referencian en la web
+
+site_url: "/" # opcional, para previews
+display_url: "/" # opcional
+
+collections:
+  - name: "branding"
+    label: "Branding"
+    files:
+      - file: "src/content/branding.json"
+        label: "Imágenes principales"
+        name: "branding"
+        fields:
+          - label: "Logo"
+            name: "logo"
+            widget: "image"
+            choose_url: true
+            allow_multiple: false
+          - label: "Hero (imagen derecha)"
+            name: "heroRightImage"
+            widget: "image"
+            choose_url: true
+            allow_multiple: false
+
+            # Carruseles
+  - name: "home"
+    label: "Home"
+    files:
+      - file: "src/content/home.json"
+        label: "Carruseles"
+        name: "home"
+        fields:
+          - label: "Hero Carrusel"
+            name: "heroCarousel"
+            widget: "list"
+            field:
+              label: "Imagen"
+              name: "image"
+              widget: "image"
+              choose_url: true
+          - label: "Productos Carrusel"
+            name: "productsCarousel"
+            widget: "list"
+            field:
+              label: "Imagen"
+              name: "image"
+              widget: "image"
+              choose_url: true
