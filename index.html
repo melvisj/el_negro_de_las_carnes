@@ -11,6 +11,8 @@
       href="https://fonts.googleapis.com/css2?family=Anton&display=swap"
       rel="stylesheet"
     />
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
@@ -38,5 +40,19 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if (window.netlifyIdentity) {
+        // Si llegas con #invite_token a la home, abre el modal y deja crear contraseña
+        window.netlifyIdentity.on("init", (user) => {
+          if (!user && window.location.hash.includes("invite_token=")) {
+            window.netlifyIdentity.open("signup"); // o 'login', ambos funcionan con el token
+          }
+        });
+        // Una vez logueado (o completado el signup), manda al panel
+        window.netlifyIdentity.on("login", () => {
+          window.location.href = "/admin/";
+        });
+      }
+    </script>
   </body>
 </html>

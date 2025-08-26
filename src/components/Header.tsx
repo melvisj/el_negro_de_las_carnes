@@ -5,7 +5,7 @@ interface HeaderProps {
   logo: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ logo }) => {
+const Header: React.FC<HeaderProps> = ({ }) => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   return (
