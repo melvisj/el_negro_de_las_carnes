@@ -63,11 +63,24 @@ const Carousel: React.FC<CarouselProps> = ({
     [safeImages.length]
   );
 
+  // Accesibilidad: flechas de teclado
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") goPrev();
+    if (e.key === "ArrowRight") goNext();
+  };
+
   // --- Pointer Events (touch + mouse) ---
   const onPointerDown = (e: React.PointerEvent) => {
     if (safeImages.length <= 1) return;
+
+    // ⚠️ Si el down viene de una flecha, NO iniciamos swipe
+    const target = e.target as HTMLElement;
+    if (target.closest("[data-skip-swipe]")) return;
+
+    // solo botón izquierdo / primario
+    if (e.button !== 0) return;
+
     setIsDragging(true);
-    // capturamos el puntero para seguir recibiendo eventos aunque salga del contenedor
     (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
     startXRef.current = e.clientX;
     startYRef.current = e.clientY;
@@ -83,12 +96,11 @@ const Carousel: React.FC<CarouselProps> = ({
     if (Math.abs(dy) > Math.abs(dx) * 1.2) return;
 
     deltaXRef.current = dx;
-    // Forzamos re-render vía style computed; no cambiamos estado por performance
     if (containerRef.current) {
       const imgWrap = containerRef.current.querySelector<HTMLDivElement>("[data-imgwrap]");
       if (imgWrap) {
         imgWrap.style.transition = "none";
-        imgWrap.style.transform = `translateX(${dx * 0.25}px)`; // arrastre suave
+        imgWrap.style.transform = `translateX(${dx * 0.25}px)`;
       }
     }
   };
@@ -100,7 +112,6 @@ const Carousel: React.FC<CarouselProps> = ({
       (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
     } catch {}
 
-    // Umbral dinámico según ancho; mínimo 40px, máximo 120px
     const width = containerRef.current?.offsetWidth ?? 600;
     const threshold = Math.max(40, Math.min(120, Math.round(width * 0.15)));
     const passed = Math.abs(deltaXRef.current) > threshold;
@@ -114,25 +125,20 @@ const Carousel: React.FC<CarouselProps> = ({
     }
 
     if (passed) {
-      if (deltaXRef.current < 0) {
-        goNext();
-      } else {
-        goPrev();
-      }
+      if (deltaXRef.current < 0) goNext();
+      else goPrev();
     }
 
-    // reset
     deltaXRef.current = 0;
   };
 
   return (
-    <div className={`relative w-full ${className}`}>
+    <div className={`relative w-full ${className}`} onKeyDown={onKeyDown} tabIndex={0}>
       {/* Contenedor visual del carrusel */}
       <div
         ref={containerRef}
         className="relative mx-auto w-full max-w-6xl rounded-2xl overflow-hidden select-none"
         style={{
-          // Permitimos scroll vertical normal y capturamos el horizontal
           touchAction: "pan-y",
           WebkitUserSelect: "none",
           userSelect: "none",
@@ -155,7 +161,6 @@ const Carousel: React.FC<CarouselProps> = ({
             className="block max-w-full h-auto"
             draggable={false}
             loading="eager"
-            // Altura responsiva sin deformar
             style={{ maxHeight: "clamp(220px, 65vh, 680px)" }}
           />
         </div>
@@ -165,8 +170,9 @@ const Carousel: React.FC<CarouselProps> = ({
           <>
             <button
               type="button"
+              data-skip-swipe
               onClick={goPrev}
-              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition"
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition z-10"
               aria-label="Anterior"
             >
               <ChevronLeft />
@@ -174,8 +180,9 @@ const Carousel: React.FC<CarouselProps> = ({
 
             <button
               type="button"
+              data-skip-swipe
               onClick={goNext}
-              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition z-10"
               aria-label="Siguiente"
             >
               <ChevronRight />
