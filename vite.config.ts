@@ -1,10 +1,16 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
+/// <reference types="node" />
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-  optimizeDeps: {
-    exclude: ['lucide-react'],
+  optimizeDeps: { exclude: ['lucide-react'] },
+  define: {
+    '__BUILD_ID__': JSON.stringify(
+      process.env.NETLIFY_BUILD_ID ||
+      process.env.COMMIT_REF ||
+      Date.now().toString()
+    ),
   },
-});
+})

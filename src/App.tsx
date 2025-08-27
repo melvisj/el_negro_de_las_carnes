@@ -7,17 +7,25 @@ import CarouselSection from './components/CarouselSection';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 
-// 👇 Contenido editable por Decap CMS
+// Contenido editable
 import branding from './content/branding.json';
 import home from './content/home.json';
+
+// cache-buster con el id del build
+const bust = (url: string) =>
+  url ? `${url}${url.includes('?') ? '&' : '?'}v=${__BUILD_ID__}` : url;
 
 const App: React.FC = () => {
   // Arrays que vienen del CMS (con fallback a [])
   const productsFromCMS =
-    (home?.productsCarousel ?? []).map((i) => i.image).filter(Boolean);
+    (home?.productsCarousel ?? [])
+      .map((i) => bust(i.image))
+      .filter(Boolean);
 
   const combosFromCMS =
-    (home?.combosCarousel ?? []).map((i) => i.image).filter(Boolean);
+    (home?.combosCarousel ?? [])
+      .map((i) => bust(i.image))
+      .filter(Boolean);
 
   return (
     <div className="min-h-screen">

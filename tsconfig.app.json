@@ -18,7 +18,10 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* 👇 Añadidos útiles */
+    "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["src", "src/types"]
 }
