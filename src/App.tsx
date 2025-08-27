@@ -7,75 +7,95 @@ import CarouselSection from './components/CarouselSection';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 
-// 👇 Contenido editable por Decap CMS
+// Contenido CMS (Decap)
 import branding from './content/branding.json';
 import home from './content/home.json';
 
-// Para tipar lo que viene del CMS
-interface CmsImageItem { image: string }
+// Tipos robustos para elementos del CMS
+type ImageLike =
+  | string
+  | { image?: string | null }
+  | null
+  | undefined;
 
-// cache-buster con el id del build
+// Cache-buster simple (sin depender de defines del bundler)
+const BUILD_ID =
+  (typeof window !== 'undefined' && (window as any).__BUILD_ID__) ||
+  (import.meta as any)?.env?.VITE_BUILD_ID ||
+  Date.now().toString(36);
+
 const bust = (url: string) =>
-  url ? `${url}${url.includes('?') ? '&' : '?'}v=${__BUILD_ID__}` : url;
+  url ? `${url}${url.includes('?') ? '&' : '?'}v=${BUILD_ID}` : url;
+
+// Normaliza arrays de imágenes que pueden venir como string o como objeto { image }
+const toUrl = (item: ImageLike): string => {
+  if (!item) return '';
+  if (typeof item === 'string') return item;
+  return item.image ?? '';
+};
+
+const normalizeImages = (arr?: ImageLike[]): string[] => {
+  const urls = (arr ?? [])
+    .map(toUrl)
+    .map(u => (typeof u === 'string' ? u.trim() : ''))
+    .filter((u): u is string => !!u);
+
+  // cache-busting + de-duplicado preservando orden
+  const withBust = urls.map(bust);
+  const seen = new Set<string>();
+  return withBust.filter(u => (seen.has(u) ? false : (seen.add(u), true)));
+};
 
 const App: React.FC = () => {
-  const productsFromCMS =
-    ((home?.productsCarousel as CmsImageItem[]) ?? [])
-      .map((i) => bust(i.image))
-      .filter(Boolean);
-
-  const combosFromCMS =
-    ((home?.combosCarousel as CmsImageItem[]) ?? [])
-      .map((i) => bust(i.image))
-      .filter(Boolean);
+  // Lee y normaliza desde el CMS
+  const productsFromCMS = normalizeImages((home as any)?.productsCarousel);
+  const combosFromCMS   = normalizeImages((home as any)?.combosCarousel);
 
   return (
     <div className="min-h-screen">
-      <Header logo={branding.logo} />
+      <Header logo={(branding as any)?.logo} />
 
       <HeroSection
-        title="Calidad Premium en cada corte"
-        subtitle="Desde Santiago, te traemos carnes de Categoría V, frescas y de origen nacional."
-        logo={branding.logo}
-        heroRightImage={branding.heroRightImage}
+        title="Calidad Premium para tu parrilla"
+        subtitle="Cortes seleccionados, frescura garantizada y despacho rápido."
+        logo={(branding as any)?.logo}
+        heroRightImage={(branding as any)?.heroRightImage}
       />
 
       <ContentSection
-        title="Sabor directo a tu puerta"
-        text="El auténtico sabor de nuestras carnes llega fresco y rápido hasta tu casa. ¡Preparado para encender la parrilla sin moverte!"
+        title="El auténtico sabor de nuestras carnes llega fresco hasta tu casa"
+        text="¡Listo para encender la parrilla sin moverte!"
         background="light"
       />
 
-      <CarouselSection
-        id="productos"
-        title="Nuestros Productos"
-        images={productsFromCMS}
-        background="dark"
-      />
+      {productsFromCMS.length > 0 && (
+        <CarouselSection
+          id="productos"
+          title="Nuestros Productos"
+          images={productsFromCMS}
+          background="dark"
+        />
+      )}
 
-      <ContentSection
-        title="Origen 100% nacional, calidad que se siente"
-        text="Trabajamos solo con novillos jóvenes de Categoría V, para asegurar frescura, sabor y jugosidad en cada bocado."
-        background="light"
-      />
+      {combosFromCMS.length > 0 && (
+        <CarouselSection
+          id="combos"
+          title="Combos y Ofertas"
+          images={combosFromCMS}
+          background="light"
+        />
+      )}
 
       <CTASection
-        title="Haz tu pedido por WhatsApp y llévate calidad a domicilio"
-        text="Selecciona tu combo o corte favorito y recibe nuestras mejores piezas directo en tu puerta. ¡Listo para asar!"
+        title="¿Listo para tu pedido?"
+        text="Escríbenos por WhatsApp y te asesoramos al instante."
         buttonText="Pedir por WhatsApp"
         buttonLink="https://wa.me/56987575067"
         background="primary"
       />
 
-      <CarouselSection
-        id="combos"
-        title="Nuestros Combos"
-        images={combosFromCMS}
-        background="light"
-      />
-
       <Footer
-        text="Síguenos para más tips, recetas y promociones carnivoras"
+        text="Síguenos en redes para novedades, ofertas y recetas."
         background="dark"
         instagramLink="https://www.instagram.com/elnegrodelascarnes.cl"
         tiktokLink="https://www.tiktok.com/@elnegrodelascarnes.cl"

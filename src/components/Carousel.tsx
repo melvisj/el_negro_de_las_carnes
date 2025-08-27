@@ -16,87 +16,86 @@ const Carousel: React.FC<CarouselProps> = ({
   showIndicators = true,
   className = "",
 }) => {
+  const safeImages = Array.isArray(images) ? images.filter(Boolean) : [];
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  // Evita índices fuera de rango si cambia el array
   useEffect(() => {
-    if (!autoPlay || images.length <= 1) return;
-    const timer = setInterval(() => {
-      setCurrentIndex((prev) =>
-        prev === images.length - 1 ? 0 : prev + 1
-      );
-    }, interval);
-    return () => clearInterval(timer);
-  }, [autoPlay, interval, images.length]);
+    if (currentIndex >= safeImages.length) {
+      setCurrentIndex(0);
+    }
+  }, [safeImages.length, currentIndex]);
 
-  const goToPrevious = () => {
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
-  };
-  const goToNext = () => {
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-  const goToSlide = (index: number) => setCurrentIndex(index);
+  // Auto-play
+  useEffect(() => {
+    if (!autoPlay || safeImages.length <= 1) return;
+    const id = window.setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % safeImages.length);
+    }, Math.max(2000, interval));
+    return () => window.clearInterval(id);
+  }, [autoPlay, interval, safeImages.length]);
 
-  if (images.length === 0) return null;
+  if (safeImages.length === 0) {
+    return (
+      <div className={`relative w-full overflow-hidden ${className}`}>
+        <div className="w-full h-full flex items-center justify-center text-sm text-white/70">
+          No hay imágenes para mostrar
+        </div>
+      </div>
+    );
+  }
+
+  const goPrev = () =>
+    setCurrentIndex((prev) => (prev - 1 + safeImages.length) % safeImages.length);
+  const goNext = () =>
+    setCurrentIndex((prev) => (prev + 1) % safeImages.length);
 
   return (
-    <div
-      className={[
-        // altura por proporción + mínimo para móviles
-        "relative w-full overflow-hidden rounded-2xl bg-[#0B1620] aspect-16-9 min-h-[220px]",
-        className,
-      ].join(" ")}
-    >
-      {/* Track de slides */}
-      <div
-        className="flex h-full transition-transform duration-500 ease-out"
-        style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-      >
-        {images.map((image, index) => (
-          <div key={index} className="w-full h-full flex-shrink-0">
-            <img
-              src={image}
-              alt={`Slide ${index + 1}`}
-              className="block w-full h-full object-contain"
-              loading="lazy"
-            />
-          </div>
-        ))}
-      </div>
+    <div className={`relative w-full overflow-hidden ${className}`}>
+      {/* Imagen */}
+      <img
+        src={safeImages[currentIndex]}
+        alt={`Slide ${currentIndex + 1}`}
+        className="w-full h-full object-contain md:object-cover select-none"
+        draggable={false}
+        loading="eager"
+      />
 
-      {images.length > 1 && (
+      {/* Controles */}
+      {safeImages.length > 1 && (
         <>
-          {/* Botones */}
           <button
-            onClick={goToPrevious}
-            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
+            type="button"
+            onClick={goPrev}
+            className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition"
             aria-label="Anterior"
           >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={goToNext}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full transition-colors"
-            aria-label="Siguiente"
-          >
-            <ChevronRight className="w-5 h-5" />
+            <ChevronLeft />
           </button>
 
-          {/* Indicadores */}
-          {showIndicators && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-              {images.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => goToSlide(i)}
-                  className={`w-3 h-3 rounded-full transition-colors ${
-                    i === currentIndex ? "bg-white" : "bg-white/50"
-                  }`}
-                  aria-label={`Ir al slide ${i + 1}`}
-                />
-              ))}
-            </div>
-          )}
+          <button
+            type="button"
+            onClick={goNext}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition"
+            aria-label="Siguiente"
+          >
+            <ChevronRight />
+          </button>
         </>
+      )}
+
+      {/* Indicadores */}
+      {showIndicators && safeImages.length > 1 && (
+        <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2">
+          {safeImages.map((_, i) => (
+            <span
+              key={i}
+              onClick={() => setCurrentIndex(i)}
+              className={`w-2.5 h-2.5 rounded-full border border-white/60 cursor-pointer ${i === currentIndex ? "bg-white" : "bg-white/50"}`}
+              aria-label={`Ir al slide ${i + 1}`}
+            />
+          ))}
+        </div>
       )}
     </div>
   );
