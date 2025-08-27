@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 interface CarouselProps {
@@ -6,7 +6,7 @@ interface CarouselProps {
   autoPlay?: boolean;
   interval?: number;
   showIndicators?: boolean;
-  className?: string; // se mezcla con el wrapper
+  className?: string;
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -16,14 +16,15 @@ const Carousel: React.FC<CarouselProps> = ({
   showIndicators = true,
   className = "",
 }) => {
-  const safeImages = Array.isArray(images) ? images.filter(Boolean) : [];
+  const safeImages = useMemo(
+    () => (Array.isArray(images) ? images.filter(Boolean) : []),
+    [images]
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
 
   // Evita índices fuera de rango si cambia el array
   useEffect(() => {
-    if (currentIndex >= safeImages.length) {
-      setCurrentIndex(0);
-    }
+    if (currentIndex >= safeImages.length) setCurrentIndex(0);
   }, [safeImages.length, currentIndex]);
 
   // Auto-play
@@ -37,8 +38,8 @@ const Carousel: React.FC<CarouselProps> = ({
 
   if (safeImages.length === 0) {
     return (
-      <div className={`relative w-full overflow-hidden ${className}`}>
-        <div className="w-full h-full flex items-center justify-center text-sm text-white/70">
+      <div className={`relative w-full ${className}`}>
+        <div className="w-full flex items-center justify-center py-16 text-sm text-white/70">
           No hay imágenes para mostrar
         </div>
       </div>
@@ -51,47 +52,56 @@ const Carousel: React.FC<CarouselProps> = ({
     setCurrentIndex((prev) => (prev + 1) % safeImages.length);
 
   return (
-    <div className={`relative w-full overflow-hidden ${className}`}>
-      {/* Imagen */}
-      <img
-        src={safeImages[currentIndex]}
-        alt={`Slide ${currentIndex + 1}`}
-        className="w-full h-full object-contain md:object-cover select-none"
-        draggable={false}
-        loading="eager"
-      />
+    <div className={`relative w-full ${className}`}>
+      {/* Contenedor visual del carrusel */}
+      <div className="relative mx-auto w-full max-w-6xl rounded-2xl overflow-hidden">
+        {/* Wrapper para centrar la imagen y dar altura mínima sin forzarla */}
+        <div className="relative flex items-center justify-center bg-black/10 p-3 md:p-6">
+          <img
+            src={safeImages[currentIndex]}
+            alt={`Slide ${currentIndex + 1}`}
+            className="block max-w-full h-auto select-none"
+            draggable={false}
+            loading="eager"
+            // Limita altura sin deformar (no usamos h-full para no estirar)
+            style={{ maxHeight: "clamp(220px, 65vh, 680px)" }}
+          />
 
-      {/* Controles */}
-      {safeImages.length > 1 && (
-        <>
-          <button
-            type="button"
-            onClick={goPrev}
-            className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition"
-            aria-label="Anterior"
-          >
-            <ChevronLeft />
-          </button>
+          {/* Controles */}
+          {safeImages.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={goPrev}
+                className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition"
+                aria-label="Anterior"
+              >
+                <ChevronLeft />
+              </button>
 
-          <button
-            type="button"
-            onClick={goNext}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition"
-            aria-label="Siguiente"
-          >
-            <ChevronRight />
-          </button>
-        </>
-      )}
+              <button
+                type="button"
+                onClick={goNext}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/20 hover:bg-white/30 border border-white/40 text-white backdrop-blur-md transition"
+                aria-label="Siguiente"
+              >
+                <ChevronRight />
+              </button>
+            </>
+          )}
+        </div>
+      </div>
 
       {/* Indicadores */}
       {showIndicators && safeImages.length > 1 && (
-        <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2">
+        <div className="mt-3 flex justify-center gap-2">
           {safeImages.map((_, i) => (
             <span
               key={i}
               onClick={() => setCurrentIndex(i)}
-              className={`w-2.5 h-2.5 rounded-full border border-white/60 cursor-pointer ${i === currentIndex ? "bg-white" : "bg-white/50"}`}
+              className={`w-2.5 h-2.5 rounded-full border border-white/60 cursor-pointer ${
+                i === currentIndex ? "bg-white" : "bg-white/50"
+              }`}
               aria-label={`Ir al slide ${i + 1}`}
             />
           ))}
