@@ -6,6 +6,7 @@ import CTASection from './components/CTASection';
 import CarouselSection from './components/CarouselSection';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
+import MapSection from './components/MapSection';
 
 // Contenido CMS (Decap)
 import branding from './content/branding.json';
@@ -18,7 +19,7 @@ type ImageLike =
   | null
   | undefined;
 
-// Cache-buster simple (sin depender de defines del bundler)
+// Cache-buster simple
 const BUILD_ID =
   (typeof window !== 'undefined' && (window as any).__BUILD_ID__) ||
   (import.meta as any)?.env?.VITE_BUILD_ID ||
@@ -92,6 +93,22 @@ const App: React.FC = () => {
         buttonText="Pedir por WhatsApp"
         buttonLink="https://wa.me/56987575067"
         background="primary"
+      />
+
+      {/* Sección de mapa (dos ubicaciones) */}
+      <MapSection
+        title="Nuestras ubicaciones"
+        background="light"
+        locations={[
+          {
+            title: "San Diego",
+            address: "San Diego 209, Local 6, Santiago, Chile",
+          },
+          {
+            title: "Manuel Rodríguez",
+            address: "Av. Manuel Rodríguez Norte 374, Santiago, Chile",
+          },
+        ]}
       />
 
       <Footer
